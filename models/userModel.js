@@ -33,7 +33,21 @@ const userSchema = new mongoose.Schema({
             default:false,
         },
         bookTitle:string,
-        borrowedDate:Date
+        borrowedDate:Date,
+        dueDate:Date,
     }
-  ]
+  ],
+  avtar:{
+    public_id:String,
+    url:String,
+  },
+  veficationCode:Number,
+  verificationCodeExpire: Date,
+  resetPasswordToken:Date,
+}, 
+{
+    timestamps:true
 });
+
+
+export const User = mongoose.model("User" , userSchema);
