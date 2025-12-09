@@ -9,7 +9,7 @@ import { sendToken } from "../utils/sendToken.js";
 export const register = catchAsyncErrors(async (req, res, next) => {
   console.log("BODY =>", req.body);
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body || {};
     if (!name || !email || !password) {
       return next(new ErrorHandler("please enter all fields.", 400));
     }
@@ -52,7 +52,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
 
 
 export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
-  const { email, otp } = req.body;
+  const { email, otp } = req.body || {};
 
   if (!email || !otp) {
     return next(new ErrorHandler("Email or OTP missing", 400));
@@ -95,3 +95,44 @@ console.log("OTP FROM BODY =>", otp);
 
   sendToken(user, 200, "Account Verified", res);
 });
+
+
+export const login = catchAsyncErrors(async(req, res, next)=>{
+  const {email , password} = req.body || {};
+  if(!email || !password){
+   return next( new ErrorHandler("Please enter all fields" , 400))
+  }
+
+  const user = await User.findOne({email , accountVerified:true}).select("+password");
+  if(!user){
+    return next(new ErrorHandler("Invalid email or password" , 400))
+  }
+
+  const ispasswordMatched = await bcrypt.compare(password , user.password);
+  if(!ispasswordMatched){
+    return next(new ErrorHandler("Invalid Email or  Password" , 400))
+  }
+  sendToken(user, 200 , "User login successfully" , res)
+})
+
+
+export const logout = catchAsyncErrors(async(req , res, next)=>{
+  res.status(200).cookie("token", "" , {
+    expires: new Date(Date.now()),
+    httpOnly:true,
+  }).json({
+    success:true,
+    message:"Logged Out successfully.",
+  })
+})
+
+export const getUser = catchAsyncErrors(async(req , res, next)=>{
+  const user = req.user || {};
+  res.status(200).json({
+    success:true,
+    user,
+  })
+})
+
+
+
