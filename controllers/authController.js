@@ -179,57 +179,9 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// export const resetPassword = catchAsyncErrors(async (req, res, next) => {
-//   const { token } = req.params;
-//   const resetPasswordToken = crypto
-//     .createHash("sha256")
-//     .update(token)
-//     .digest("hex");
-
-//   const user = await User.findOne({
-//     resetPasswordToken,
-//     resetPasswordExpire: { $gt: Date.now() },
-//   });
-//   if (!user) {
-//     return next(
-//       new ErrorHandler(
-//         " Reset Password token is Invalid or has been expired",
-//         400
-//       )
-//     );
-//   }
-
-//   if (req.body.password !== req.body.confirmPassword) {
-//     return next(
-//       new ErrorHandler("Password & confirm Password do not match", 400)
-//     );
-//   }
-
-//   if (
-//     req.body.password > 8 ||
-//     req.body.password > 16 ||
-//     req.body.confirmPassword < 8 ||
-//     req.body.confirmPassword > 16
-//   ) {
-//     return next(
-//       new ErrorHandler("Password must be between 8 to 16 characters", 400)
-//     );
-//   }
-
-//   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-//   user.password = hashedPassword;
-//   user.resetPasswordToken = undefined;
-//   user.resetPasswordExpire = undefined;
-
-//   await user.save();
-
-//   sendToken(user , 200 , "password reset successfully" , res)
-// });
-
 
 export const resetPassword = catchAsyncErrors(async (req, res, next) => {
-  console.log("📌 Incoming Reset Request...");
-  console.log("➡ URL token (raw):", req.params.token);
+
 
   const { token } = req.params;
 
@@ -245,13 +197,13 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
     resetPasswordExpire: { $gt: Date.now() },
   });
 
-  console.log("👤 User found with hashed token:", user ? "YES" : "NO");
+  
   if (user) {
-    console.log("⏳ Token expires at:", user.resetPasswordExpire);
+    console.log("Token expires at:", user.resetPasswordExpire);
   }
 
   if (!user) {
-    console.log("❌ ERROR — Token didn't match OR expired");
+    
     return next(
       new ErrorHandler("Reset password token is invalid or has expired", 400)
     );
@@ -259,21 +211,20 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
 
   const { password, confirmPassword } = req.body;
 
-  console.log("🔑 Password:", password);
-  console.log("🔑 Confirm Password:", confirmPassword);
+  
 
   if (!password || !confirmPassword) {
-    console.log("❌ ERROR — Missing password fields");
+  
     return next(new ErrorHandler("Please enter password & confirm password", 400));
   }
 
   if (password !== confirmPassword) {
-    console.log("❌ ERROR — Password mismatch");
+    
     return next(new ErrorHandler("Password & confirm Password do not match", 400));
   }
 
   if (password.length < 8 || password.length > 16) {
-    console.log("❌ ERROR — Password length invalid");
+   
     return next(new ErrorHandler("Password must be between 8 to 16 characters", 400));
   }
 
@@ -283,9 +234,9 @@ export const resetPassword = catchAsyncErrors(async (req, res, next) => {
   user.resetPasswordExpire = undefined;
 
   await user.save();
-  console.log("✅ Password saved successfully");
 
-  console.log("🚀 Sending token to client...");
+
+  
   sendToken(user, 200, "Password reset successfully", res);
 });
 
