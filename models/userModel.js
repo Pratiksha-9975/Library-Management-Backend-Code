@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
         dueDate: Date,
       },
     ],
-    avtar: {
+    avatar: {
       public_id: String,
       url: String,
     },

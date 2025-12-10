@@ -7,6 +7,8 @@ import {errorMiddleware} from "./middlewares/errorMiddlewares.js"
 import authrouter from "./routes/authRouter.js"
 import bookRouter from "./routes/bookRouter.js"
 import borrowRouter from "./routes/borrowRouter.js"
+import userRouter from "./routes/userRouter.js"
+import expressfileupload from "express-fileupload"
 
 export const app = express();
 
@@ -24,9 +26,15 @@ app.use(express.json());
 
 app.use(express.urlencoded({extended:true}));
 
+app.use(expressfileupload({
+    useTempFiles:true,
+    tempFileDir:"/temp/"
+}))
+
 app.use("/api/v1/auth",authrouter )
 app.use("/api/v1/book",bookRouter )
 app.use("/api/v1/borrow" , borrowRouter)
+app.use("/api/v1/user" , userRouter)
 
 connectDB();
 
