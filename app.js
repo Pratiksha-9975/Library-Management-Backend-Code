@@ -6,6 +6,7 @@ import { connectDB } from "./database/db.js";
 import {errorMiddleware} from "./middlewares/errorMiddlewares.js"
 import authrouter from "./routes/authRouter.js"
 import bookRouter from "./routes/bookRouter.js"
+import borrowRouter from "./routes/borrowRouter.js"
 
 export const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.urlencoded({extended:true}));
 
 app.use("/api/v1/auth",authrouter )
 app.use("/api/v1/book",bookRouter )
+app.use("/api/v1/borrow" , borrowRouter)
 
 connectDB();
 
