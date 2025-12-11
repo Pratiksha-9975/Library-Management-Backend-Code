@@ -103,6 +103,14 @@ export const verifyOTP = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {
+
+  console.log("===== LOGIN API HIT =====");
+  console.log("Request Body:", req.body);
+  console.log("Headers:", req.headers);
+  console.log("Query Params:", req.query);
+  console.log("Cookies:", req.cookies);
+  console.log("==========================");
+  
   const { email, password } = req.body || {};
   if (!email || !password) {
     return next(new ErrorHandler("Please enter all fields", 400));
