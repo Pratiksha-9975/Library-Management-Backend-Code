@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 
 export const getAllusers = catchAsyncErrors(async (req, res, next) => {
-  const users = await User.find({ accountVerified: true });
+  const users = await User.find();
   res.status(200).json({
     success: true,
     users,

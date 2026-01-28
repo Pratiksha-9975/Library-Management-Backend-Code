@@ -71,7 +71,7 @@ export const returnBorrowedBook = catchAsyncErrors(async (req, res, next) => {
   const book = await BooK.findById(bookId);
   if (!book) return next(new ErrorHandler("Book not found", 404));
 
-  const user = await User.findOne({ email, accountVerified: true });
+  const user = await User.findOne({ email, });
   if (!user) return next(new ErrorHandler("User not found", 404));
 
   const borrowedBook = user.borrowedBooks.find(
